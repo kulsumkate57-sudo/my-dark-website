@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Dark World</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #100609;
+  color: #f8e9ec;
+  font-family: Georgia, serif;
+  text-align: center;
+  min-height: 100vh;
+}
+
+header {
+  padding: 25px 15px;
+  color: #e9a0b0;
+  letter-spacing: 4px;
+  font-size: 13px;
+}
+
+main {
+  padding: 65px 22px;
+}
+
+.rose {
+  font-size: 48px;
+  margin-bottom: 25px;
+}
+
+h1 {
+  color: #a51d3d;
+  font-size: 42px;
+  margin-bottom: 18px;
+}
+
+.subtitle {
+  color: #d8aeb8;
+  font-size: 17px;
+  line-height: 1.8;
+  margin-bottom: 35px;
+}
+
+.card {
+  max-width: 420px;
+  margin: auto;
+  padding: 30px 22px;
+  border: 1px solid #682238;
+  border-radius: 18px;
+  background: #1b0b11;
+  line-height: 1.9;
+}
+
+h2 {
+  color: #e9a0b0;
+  margin-bottom: 15px;
+}
+
+button {
+  margin-top: 25px;
+  padding: 13px 24px;
+  background: #8f1834;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 15px;
+}
+
+#message {
+  margin-top: 20px;
+  color: #f2b8c5;
+}
+
+footer {
+  padding: 30px 10px;
+  color: #a88a93;
+  font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>✦ MY LITTLE UNIVERSE ✦</header>
+
+<main>
+  <div class="rose">🥀</div>
+
+  <h1>My Dark World</h1>
+
+  <p class="subtitle">
+    A little mystery.<br>
+    A little magic.<br>
+    A world that belongs to me.
+  </p>
+
+  <section class="card">
+    <h2>Welcome to my world</h2>
+
+    <p>
+      I'm a dreamer with a creative soul.<br>
+      I love stories, art, and beautiful things.<br>
+      This is my little corner of the internet.
+    </p>
+
+    <button onclick="showMessage()">
+      Discover a secret ✨
+    </button>
+
+    <p id="message"></p>
+  </section>
+</main>
+
+<footer>Made with ♡ and a little mystery</footer>
+
+<script>
+function showMessage() {
+  document.getElementById("message").textContent =
+    "Your story is only just beginning. 🌹";
+}
+</script>
+
+</body>
+</html>
