@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Cherry Catch - My Dark World</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative&family=Poppins:wght@300&display=swap" rel="stylesheet">
+<style>
+*{touch-action:manipulation}
+body{margin:0;background:#0e060a;color:#ffd6de;font-family:'Poppins',sans-serif;overflow:hidden;text-align:center}
+#top{padding:12px;display:flex;justify-content:space-between;background:#1a0a12;font-size:14px}
+#game{width:100vw;height:78vh;position:relative;overflow:hidden;background:radial-gradient(circle at center,#2a1020 0%,#12060e 70%,#08030a 100%)}
+.fruit{position:absolute;font-size:28px;cursor:pointer;user-select:none;animation:fall linear forwards;filter:drop-shadow(0 0 8px rgba(255,100,130,0.6))}
+@keyframes fall{from{top:-60px}to{top:85vh}}
+#player{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:40px;transition:left 0.1s}
+#overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(10,3,7,0.92);display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:10}
+.btn{background:linear-gradient(#7a1f36,#4a1020);color:white;border:none;padding:14px 30px;border-radius:30px;margin:8px;font-size:14px;box-shadow:0 0 15px rgba(122,31,54,0.6)}
+</style>
+</head>
+<body>
+<div id="top"><span id="score">🍒 0</span><span id="timer">30s</span><span id="soundBtn" onclick="toggleSound()">🔊</span></div>
+<div id="game"><div id="player">🧺</div>
+<div id="overlay">
+<h2 style="font-family:'Cinzel Decorative';color:#ff8fa3">Cherry Dreams</h2>
+<p style="font-size:13px;opacity:0.7;padding:0 20px">Catch the falling cherries 🍒<br>Avoid the thorns 🥀<br>So aesthetic, so you</p>
+<button class="btn" onclick="startGame()">Start with Music ✨</button>
+</div>
+</div>
+
+<script>
+let score=0,time=30,playing=false,muted=false,audio;
+const game=document.getElementById('game'), scoreEl=document.getElementById('score'), timerEl=document.getElementById('timer'), overlay=document.getElementById('overlay'), player=document.getElementById('player');
+
+function initAudio(){audio=new (window.AudioContext||window.webkitAudioContext)();}
+function playTone(f,d,v=0.3){if(muted||!audio)return;const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=f;o.connect(g);g.connect(audio.destination);g.gain.setValueAtTime(v, audio.currentTime);g.gain.exponentialRampToValueAtTime(0.01,audio.currentTime+d);o.start();o.stop(audio.currentTime+d);}
+function toggleSound(){muted=!muted;document.getElementById('soundBtn').innerText=muted?'🔇':'🔊';if(muted)playTone(100,0.1,0);else playTone(600,0.2);}
+
+let spawnInt, timerInt, playerX=50;
+document.addEventListener('touchmove',e=>{playerX=(e.touches[0].clientX/window.innerWidth)*100;player.style.left=playerX+'%';});
+document.addEventListener('mousemove',e=>{playerX=(e.clientX/window.innerWidth)*100;player.style.left=playerX+'%';});
+
+function startGame(){
+ if(!audio)initAudio();
+ score=0;time=30;playing=true;playerX=50;
+ overlay.style.display='none';scoreEl.innerText='🍒 0';timerEl.innerText='30s';
+ playTone(523,0.3);setTimeout(()=>playTone(659,0.3),150);
+ spawnInt=setInterval(spawn,500);
+ timerInt=setInterval(()=>{time--;timerEl.innerText=time+'s';if(time<=0)endGame();},1000);
+}
+function spawn(){
+ if(!playing)return;
+ const el=document.createElement('div');el.className='fruit';
+ const isBad=Math.random()<0.25;
+ el.innerText=isBad?'🥀':['🍒','🍓','🌹','✨'][Math.floor(Math.random()*4)];
+ el.style.left=Math.random()*85+2+'%';el.style.animationDuration=(Math.random()*1.5+2.5)+'s';
+ game.appendChild(el);
+ let fallen=false;
+ el.addEventListener('animationend',()=>{if(!fallen){el.remove();}});
+ const check=setInterval(()=>{
+   const r=el.getBoundingClientRect(), p=player.getBoundingClientRect();
+   if(r.bottom>=p.top && r.left>=p.left-20 && r.right<=p.right+20){
+     fallen=true;clearInterval(check);
+     if(isBad){score=Math.max(0,score-3);playTone(150,0.4,0.5);el.innerText='💔';}
+     else{score++;playTone(isBad?200:800,0.2);el.innerText='💖';}
+     scoreEl.innerText='🍒 '+score;setTimeout(()=>el.remove(),200);
+   }
+ },30);
+ setTimeout(()=>{clearInterval(check);el.remove();},4000);
+}
+function endGame(){
+ playing=false;clearInterval(spawnInt);clearInterval(timerInt);
+ playTone(400,0.5);setTimeout(()=>playTone(300,0.8),200);
+ overlay.style.display='flex';
+ overlay.innerHTML=`<h2 style="font-family:'Cinzel Decorative';color:#ff8fa3">You collected ${score} cherries</h2><p style="padding:0 20px;font-size:13px">${score>20?'You are the Cherry Queen! 👑🍒':score>10?'So dreamy and aesthetic ✨':'My dark cherry princess 🖤'}</p><button class="btn" onclick="startGame()">Play Again 🍒</button><a href="index.html" class="btn" style="background:#222;text-decoration:none">Back Home</a>`;
+}
+</script>
+</body>
+</html>
